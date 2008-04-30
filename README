@@ -1,3 +1,38 @@
 = Polls
 
 This little extension allows one to define simple multiple-choice polls that will select a result from a range of options and display a sub-page accordingly.
+
+A poll body part might look like this:
+
+  <h1>Poll:</h1>
+  <r:poll>
+    <r:questions:each>
+      <h2>Question: <r:question /></h2>
+      <ol style="list-style:none;">
+        <r:options:each>
+          <li><r:option_radio /> <r:option_label /></li>
+        </r:options:each>
+      </ol>
+    </r:questions:each>
+    <input type="submit">
+  </r:poll>
+
+And the poll part would look like so:
+
+  questions:
+    -
+      - "What do you think of me?"
+      - 1: You're great
+      - 3: Can't stand you
+      - 2: I'm pretty ambivalent
+    -
+      - "Do you like ice cream?"
+      - 1: "Yes"
+      - 2: Not so much
+      - 3: Hate it
+  results:
+    3: cool
+    5: ok
+    6: messed-up
+
+When a poll is submitted, the weights that prefix each option get summed, and the first result who's weight exceeds the total gets redirected to (as a sub-page).
