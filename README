@@ -2,6 +2,10 @@
 
 This little extension allows one to define simple multiple-choice polls that will select a result from a range of options and display a sub-page accordingly.
 
+INSTALL
+cd <radiant_app>/vendor/extensions/
+git clone <polls_git_url> polls
+
 A poll body part might look like this:
 
   <h1>Poll:</h1>
