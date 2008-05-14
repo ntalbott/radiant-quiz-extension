@@ -1,22 +1,22 @@
 namespace :radiant do
   namespace :extensions do
-    namespace :polls do
+    namespace :quizzes do
       
-      desc "Runs the migration of the Polls extension"
+      desc "Runs the migration of the Quiz extension"
       task :migrate => :environment do
         require 'radiant/extension_migrator'
         if ENV["VERSION"]
-          PollsExtension.migrator.migrate(ENV["VERSION"].to_i)
+          QuizExtension.migrator.migrate(ENV["VERSION"].to_i)
         else
-          PollsExtension.migrator.migrate
+          QuizExtension.migrator.migrate
         end
       end
       
-      desc "Copies public assets of the Polls to the instance public/ directory."
+      desc "Copies public assets of the Quiz to the instance public/ directory."
       task :update => :environment do
         is_svn_or_dir = proc {|path| path =~ /\.svn/ || File.directory?(path) }
-        Dir[PollsExtension.root + "/public/**/*"].reject(&is_svn_or_dir).each do |file|
-          path = file.sub(PollsExtension.root, '')
+        Dir[QuizExtension.root + "/public/**/*"].reject(&is_svn_or_dir).each do |file|
+          path = file.sub(QuizExtension.root, '')
           directory = File.dirname(path)
           puts "Copying #{path}..."
           mkdir_p RAILS_ROOT + directory

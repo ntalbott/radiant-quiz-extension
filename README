@@ -1,15 +1,15 @@
-= Polls
+= Quiz
 
-This little extension allows one to define simple multiple-choice polls that will select a result from a range of options and display a sub-page accordingly.
+This little extension allows one to define simple multiple-choice quizzes that will select a result from a range of options and display a sub-page accordingly.
 
 INSTALL
 cd <radiant_app>/vendor/extensions/
-git clone <polls_git_url> polls
+git clone <quiz_git_url> quiz
 
-A poll body part might look like this:
+A quiz body part might look like this:
 
-  <h1>Poll:</h1>
-  <r:poll>
+  <h1>Quiz:</h1>
+  <r:quiz:form>
     <r:questions:each>
       <h2>Question: <r:question /></h2>
       <ol style="list-style:none;">
@@ -19,9 +19,9 @@ A poll body part might look like this:
       </ol>
     </r:questions:each>
     <input type="submit">
-  </r:poll>
+  </r:quiz:form>
 
-And the poll part would look like so:
+And the quiz part would look like so:
 
   questions:
     -
@@ -39,4 +39,4 @@ And the poll part would look like so:
     5: ok
     6: messed-up
 
-When a poll is submitted, the weights that prefix each option get summed, and the first result who's weight exceeds the total gets redirected to (as a sub-page).
+When a quiz is submitted, the weights that prefix each option get summed, and the first result who's weight exceeds the total gets redirected to (as a sub-page).

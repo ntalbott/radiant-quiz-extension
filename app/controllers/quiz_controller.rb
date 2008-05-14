@@ -1,7 +1,7 @@
-class PollsController < ApplicationController
+class QuizController < ApplicationController
   no_login_required
   
-  def submit
+  def process_quiz
     if params[:questions]
       total = params[:questions].collect{|k,v| v.to_i}.sum
       results = params[:results].collect{|k,v| [k.to_i,v]}.sort_by{|e| e.first}
