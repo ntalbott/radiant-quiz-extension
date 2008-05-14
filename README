@@ -2,9 +2,11 @@
 
 This little extension allows one to define simple multiple-choice quizzes that will select a result from a range of options and display a sub-page accordingly.
 
-INSTALL
+== Installation
 cd <radiant_app>/vendor/extensions/
 git clone <quiz_git_url> quiz
+
+== Usage
 
 A quiz body part might look like this:
 
@@ -40,3 +42,9 @@ And the quiz part would look like so:
     6: messed-up
 
 When a quiz is submitted, the weights that prefix each option get summed, and the first result who's weight exceeds the total gets redirected to (as a sub-page).
+
+== Credits
+
+Sponsored by Ignite Social Media LLC - http://ignitesocialmedia.com/
+Initial work done by Nathaniel Talbott for Terralien, Inc. - http://terralien.com/
+See LICENSE for copyright and licensing details.
