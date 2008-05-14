@@ -12,14 +12,30 @@ module PollTags
   
   tag "poll" do |tag|
     result = []
-    result << %(<form action="/polls" method="post">)
-    result << %(<div>)
-    CONFIG[tag]['results'].each do |(k,v)|
-      result << %(<input type="hidden" name="results[#{k}]" value="#{tag.locals.page.url}#{v}" />)
-    end
-    result << %(</div>)
-    result << tag.expand
+    validation_message = tag.attr["validation_message"] || "Please provide an answer for all the questions."
+    result << %(<form action="/polls" method="post" id="poll">)
+      result << %(<div style="display:none">)
+        CONFIG[tag]['results'].each do |(k,v)|
+          result << %(<input type="hidden" name="results[#{k}]" value="#{tag.locals.page.url}#{v}" />)
+        end
+        result << %(<input type="hidden" name="validation_message" value="#{validation_message}" />)
+        result << %(<input type="hidden" name="location" value="#{tag.locals.page.url}" />)
+      result << %(</div>)
+      result << tag.expand
     result << %(</form>)
+    result << %(
+      <script type="text/javascript">
+      $('poll').observe('submit', function(event) {
+        var radio_names = $$('#poll input[type=radio]').pluck('name').uniq();
+        var checked = radio_names.collect(function(e) {
+          return $$('#poll input[type=radio][name="' + e + '"]').pluck('checked').any();
+        });
+        if(!checked.all()) {
+          alert("#{validation_message}");
+          event.stop();
+        }
+      });
+      </script>)
     result
   end
   
