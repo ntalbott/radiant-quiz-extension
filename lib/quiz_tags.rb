@@ -42,24 +42,10 @@ module QuizTags
     tag.locals.quiz_config['results'].each do |(k,v)|
       result <<   %(<input type="hidden" name="results[#{k}]" value="#{tag.locals.page.url}#{v}" />)
     end
-    result <<     %(<input type="hidden" name="validation_message" value="#{validation_message}" />)
     result <<     %(<input type="hidden" name="location" value="#{tag.locals.page.url}" />)
     result <<   %(</div>)
     result <<   tag.expand
     result << %(</form>)
-    result << %(
-      <script type="text/javascript">
-      $('quiz').observe('submit', function(event) {
-        var radio_names = $$('#quiz input[type=radio]').pluck('name').uniq();
-        var checked = radio_names.collect(function(e) {
-          return $$('#quiz input[type=radio][name="' + e + '"]').pluck('checked').any();
-        });
-        if(!checked.all()) {
-          alert("#{validation_message}");
-          event.stop();
-        }
-      });
-      </script>)
     result
   end
   
@@ -73,7 +59,25 @@ module QuizTags
       tag.locals.question_name = "question_#{i}"
       tag.locals.question_text = q[0]
       tag.locals.question_options = q[1..-1]
+      result << %(<div style="display:none"><input type="hidden" name="required[question_#{i}]" value="1" /></div>)
       result << tag.expand
+    end
+    result
+  end
+  
+  tag "quiz:error" do |tag|
+    result = nil
+    params = tag.locals.page.request.parameters
+    if required = params['required']
+      if tag.locals.question_name
+        if !params['questions'] or !params['questions'][tag.locals.question_name]
+          result = tag.expand
+        end
+      else
+        if !params['questions'] or params['questions'].size != required.size
+          result = tag.expand
+        end
+      end
     end
     result
   end
