@@ -50,7 +50,7 @@ module QuizTags
   tag "quiz:questions:each" do |tag|
     result = []
     tag.locals.quiz_config['questions'].each_with_index do |q,i|
-      tag.locals.question_name = "question_#{i}"
+      tag.locals.question_name = "question_#{i+1}"
       tag.locals.question_text = q[0]
       tag.locals.question_options = q[1..-1]
       result << tag.expand
@@ -59,24 +59,24 @@ module QuizTags
   end
   
   tag "quiz:error" do |tag|
-    result = nil
-    params = tag.locals.page.request.parameters
-    if required = params['required']
-      if tag.locals.question_name
-        if !params['questions'] or !params['questions'][tag.locals.question_name]
-          result = tag.expand
+    quiz = tag.locals.page.last_quiz
+    if quiz
+      if name = tag.locals.question_name 
+        if quiz.errors.on(name)
+          tag.expand
         end
-      else
-        if !params['questions'] or params['questions'].size != required.size
-          result = tag.expand
-        end
+      elsif !quiz.valid?
+        result = tag.expand
       end
     end
-    result
   end
   
   tag "quiz:question" do |tag|
     tag.locals.question_text
+  end
+  
+  tag "quiz:question_name" do |tag|
+    tag.locals.question_name
   end
   
   tag "quiz:options" do |tag|

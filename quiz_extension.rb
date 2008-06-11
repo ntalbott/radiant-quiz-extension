@@ -8,7 +8,10 @@ class QuizExtension < Radiant::Extension
   end
   
   def activate
-    Page.send :include, QuizTags
+    Page.class_eval do
+      include QuizTags
+      attr_accessor :last_quiz
+    end
   end
   
   def deactivate

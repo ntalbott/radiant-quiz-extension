@@ -6,19 +6,15 @@ class QuizController < ApplicationController
   def create
     page = Page.find(params[:page_id])
     config = config(page)
-    required = config[:questions]
-    results = config[:results].collect{|k,v| [k.to_i,"#{page.url}#{v}"]}.sort_by{|e| e.first}
-    if params[:questions] and required.size == params[:questions].size
-      total = params[:questions].collect{|k,v| v.to_i}.sum
-      result = (results.detect{|k,v| k >= total} || results.last)
-      redirect_to result.last
+    quiz = Quiz.new(config, params[:questions])
+    if quiz.valid?
+      redirect_to "#{page.url}#{quiz.result}"
+    elsif page.published?
+      page.last_quiz = quiz
+      page.request, page.response = request, response
+      render :text => page.render
     else
-      if page.published?
-        page.request, page.response = request, response
-        render :text => page.render
-      else
-        render :text => %(Quiz not found.)
-      end
+      render :text => %(Quiz not found.)
     end
   end
   
