@@ -37,13 +37,7 @@ module QuizTags
   tag "quiz:form" do |tag|
     validation_message = tag.attr["validation_message"] || "Please provide an answer for all the questions."
     result = []
-    result << %(<form action="/quizzing" method="post" id="quiz">)
-    result <<   %(<div style="display:none">)
-    tag.locals.quiz_config['results'].each do |(k,v)|
-      result <<   %(<input type="hidden" name="results[#{k}]" value="#{tag.locals.page.url}#{v}" />)
-    end
-    result <<     %(<input type="hidden" name="location" value="#{tag.locals.page.url}" />)
-    result <<   %(</div>)
+    result << %(<form action="/pages/#{tag.locals.page.id}/quiz" method="post" id="quiz">)
     result <<   tag.expand
     result << %(</form>)
     result
@@ -59,7 +53,6 @@ module QuizTags
       tag.locals.question_name = "question_#{i}"
       tag.locals.question_text = q[0]
       tag.locals.question_options = q[1..-1]
-      result << %(<div style="display:none"><input type="hidden" name="required[question_#{i}]" value="1" /></div>)
       result << tag.expand
     end
     result

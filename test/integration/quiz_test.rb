@@ -8,44 +8,27 @@ class QuizTest < ActionController::IntegrationTest
     body_part = PagePart.create!(:name => 'body', :page => page, :content => quiz_body)
     
     get '/'
-    assert_select 'form[action=/quizzing][method=post]' do
+    assert_select %(form[action=/pages/#{page.id}/quiz][method=post]) do
       assert_select %(input[name='questions[question_0]'][value=1])
       assert_select %(input[name='questions[question_0]'][value=2])
       assert_select %(input[name='questions[question_0]'][value=3])
-      assert_select %(input[name='required[question_0]'][value=1])
-      assert_select %(input[name='results[3]'][value=/result1])
-      assert_select %(input[name='results[5]'][value=/result2])
-      assert_select %(input[name='results[8]'][value=/result3])
     end
     
-    post '/quizzing', 
-      :required => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :questions => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :results => {'3' => '/result1', '5' => '/result2', '8' => '/result3'}
+    url = %(/pages/#{page.id}/quiz)
+    post url, :questions => {:question_0 => '1', :question_1 => '1', :question_2 => '1'}
+    puts html_document.root
     assert_redirected_to '/result1'
 
-    post '/quizzing', 
-      :required => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :questions => {:question_0 => '1', :question_1 => '1', :question_2 => '2'},
-      :results => {'3' => '/result1', '5' => '/result2', '8' => '/result3'}
+    post url, :questions => {:question_0 => '1', :question_1 => '1', :question_2 => '2'}
     assert_redirected_to '/result2'
 
-    post '/quizzing', 
-      :required => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :questions => {:question_0 => '1', :question_1 => '2', :question_2 => '2'},
-      :results => {'3' => '/result1', '5' => '/result2', '8' => '/result3'}
+    post url, :questions => {:question_0 => '1', :question_1 => '2', :question_2 => '2'}
     assert_redirected_to '/result2'
 
-    post '/quizzing', 
-      :required => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :questions => {:question_0 => '1', :question_1 => '2', :question_2 => '3'},
-      :results => {'3' => '/result1', '5' => '/result2', '8' => '/result3'}
+    post url, :questions => {:question_0 => '1', :question_1 => '2', :question_2 => '3'}
     assert_redirected_to '/result3'
 
-    post '/quizzing', 
-      :required => {:question_0 => '1', :question_1 => '1', :question_2 => '1'},
-      :questions => {:question_0 => '3', :question_1 => '3', :question_2 => '3'},
-      :results => {'3' => '/result1', '5' => '/result2', '8' => '/result3'}
+    post url, :questions => {:question_0 => '3', :question_1 => '3', :question_2 => '3'}
     assert_redirected_to '/result3'
   end
   

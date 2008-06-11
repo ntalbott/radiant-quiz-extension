@@ -4,7 +4,7 @@ class QuizExtension < Radiant::Extension
   url "http://terralien.com/"
   
   define_routes do |map|
-    map.connect 'quizzing', :controller => 'quiz', :action => 'process_quiz'
+    map.resource :quiz, :path_prefix => "/pages/:page_id", :controller => "quiz"
   end
   
   def activate
