@@ -20,7 +20,7 @@ module QuizTags
     
   tag "quiz:teaser" do |tag|
     question = tag.locals.quiz_config['questions'].first
-    tag.locals.question_name = "question_0"
+    tag.locals.question_name = "question_1"
     tag.locals.question_text = question[0]
     tag.locals.question_options = question[1..-1]
 
